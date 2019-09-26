@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../cart.service';
+import { LogService } from '../log.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -8,12 +9,26 @@ import { CartService } from '../cart.service';
 })
 export class TopBarComponent implements OnInit {
   cart_count;
+  _subscription;
+
   constructor(
-    private cartService: CartService
-  ) { }
+    private cartService: CartService,
+    private logger: LogService
+  ) { 
+    this.cart_count = cartService.getCount();
+    this._subscription = cartService.countChange.subscribe((value) => { 
+      this.cart_count = value;
+    });
+  }
 
   ngOnInit() {
-    this.cart_count = this.cartService.getItems().length
+    this.cart_count = this.cartService.getItems().length;
+    this.logger.log(this.cart_count);
+  }
+
+  ngOnDestroy() {
+   //prevent memory leak when component destroyed
+    this._subscription.unsubscribe();
   }
 
 }

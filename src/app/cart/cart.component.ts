@@ -11,7 +11,7 @@ export class CartComponent implements OnInit {
   count;
 
   constructor(
-    private cartService: CartService
+    private cartService: CartService,
   ) { }
 
   ngOnInit() {
